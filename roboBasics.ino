@@ -59,6 +59,23 @@ void loop(){
     digitalWrite(rightMotorB, HIGH);
 
     delay(750);
+    
+    //Stop motors
+    digitalWrite(leftMotorA, LOW);
+    digitalWrite(leftMotorB, LOW);
+    
+    //If robot was turning left
+    if(roboDir == tLeft){
+      //Power left motor to turn right
+      digitalWrite(leftMotorA, HIGH);
+      digitalWrite(leftMotorB, LOW);
+    } else if (roboDir == tRight) {
+      //Power right motor to turn left
+      digitalWrite(rightMotorA, HIGH);
+      digitalWrite(rightMotorB, LOW);
+    }
+     delay(150);
+    
     roboDir = tLeft;
     //Stop motors
     digitalWrite(leftMotorA, LOW);
