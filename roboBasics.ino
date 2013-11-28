@@ -1,16 +1,16 @@
 #include <NewPing.h>
 #include <TimerOne.h>
 #include "types.h"
-#define leftMotorA 3
-#define leftMotorB 4
-#define rightMotorA 5
-#define rightMotorB 6
+#define PIN_LMOTA 3
+#define PIN_LMOTB 4
+#define PIN_RMOTA 5
+#define PIN_RMOTB 6
 
-#define trigger 7
-#define echo 8
-#define maxDist 200 //CM
+#define PIN_TRIGGER 7
+#define PIN_ECHO 8
+#define MAXDIST 200 //CM
 
-NewPing sonar(trigger, echo, maxDist);
+NewPing sonar(PIN_TRIGGER, PIN_ECHO, MAXDIST);
 unsigned int dist;
 turnDir roboDir;
 void setup(){
@@ -19,10 +19,10 @@ void setup(){
   Timer1.stop();
   Timer1.restart();
   Timer1.attachInterrupt( changeDir );
-  pinMode(leftMotorA, OUTPUT);
-  pinMode(leftMotorB, OUTPUT);
-  pinMode(rightMotorA, OUTPUT);
-  pinMode(rightMotorB, OUTPUT);
+  pinMode(PIN_LMOTA, OUTPUT);
+  pinMode(PIN_LMOTB, OUTPUT);
+  pinMode(PIN_RMOTA, OUTPUT);
+  pinMode(PIN_RMOTB, OUTPUT);
   Serial.begin(9600);
   dist = 0;
 }
@@ -40,46 +40,53 @@ void loop(){
     //Stop current motors
     if(roboDir == tLeft) {
       //Stop left motor
-      digitalWrite(leftMotorA, LOW);
-      digitalWrite(leftMotorB, LOW); 
+      digitalWrite(PIN_LMOTA, LOW);
+      digitalWrite(PIN_LMOTB, LOW); 
     } 
     else if (roboDir == tRight) {
       //Stop right motor
-      digitalWrite(rightMotorA, LOW);
-      digitalWrite(rightMotorB, LOW);
+      digitalWrite(PIN_RMOTA, LOW);
+      digitalWrite(PIN_RMOTB, LOW);
     }
     delay(10);
     //Stop forward movement timer
     Timer1.stop();
 
     //reverse
-    digitalWrite(leftMotorA, LOW);
-    digitalWrite(leftMotorB, HIGH);
-    digitalWrite(rightMotorA, LOW);
-    digitalWrite(rightMotorB, HIGH);
+    digitalWrite(PIN_LMOTA, LOW);
+    digitalWrite(PIN_LMOTB, HIGH);
+    digitalWrite(PIN_RMOTA, LOW);
+    digitalWrite(PIN_RMOTB, HIGH);
 
     delay(750);
     
-    //Stop motors
-    digitalWrite(leftMotorA, LOW);
-    digitalWrite(leftMotorB, LOW);
+    
     
     //If robot was turning left
     if(roboDir == tLeft){
+      //Stop right motor
+      digitalWrite(PIN_RMOTA, LOW);
+      digitalWrite(PIN_RMOTB, LOW);
       //Power left motor to turn right
-      digitalWrite(leftMotorA, HIGH);
-      digitalWrite(leftMotorB, LOW);
+      digitalWrite(PIN_LMOTA, HIGH);
+      digitalWrite(PIN_LMOTB, LOW);
+      roboDir = tRight;
     } else if (roboDir == tRight) {
+      //Stop left motor
+      digitalWrite(PIN_LMOTA, LOW);
+      digitalWrite(PIN_LMOTB, LOW);
       //Power right motor to turn left
-      digitalWrite(rightMotorA, HIGH);
-      digitalWrite(rightMotorB, LOW);
+      digitalWrite(PIN_RMOTA, HIGH);
+      digitalWrite(PIN_RMOTB, LOW);
+      roboDir = tLeft;
     }
-     delay(150);
+     delay(500);
     
-    roboDir = tLeft;
+    
     //Stop motors
-    digitalWrite(leftMotorA, LOW);
-    digitalWrite(leftMotorB, LOW);
+    digitalWrite(PIN_LMOTA, LOW);
+    digitalWrite(PIN_LMOTB, LOW);
+    
 
     //Restart timer
     Timer1.restart();
@@ -95,12 +102,12 @@ void changeDir(){
     roboDir = tRight;
 
     //Stop right motor
-    digitalWrite(rightMotorA, LOW);
-    digitalWrite(rightMotorB, LOW);
+    digitalWrite(PIN_RMOTA, LOW);
+    digitalWrite(PIN_RMOTB, LOW);
 
     //Power left motor to turn right
-    digitalWrite(leftMotorA, HIGH);
-    digitalWrite(leftMotorB, LOW);
+    digitalWrite(PIN_LMOTA, HIGH);
+    digitalWrite(PIN_LMOTB, LOW);
 
   } 
   else if (roboDir == tRight){
@@ -108,12 +115,12 @@ void changeDir(){
     roboDir = tLeft;
 
     //Stop left motor
-    digitalWrite(leftMotorA, LOW);
-    digitalWrite(leftMotorB, LOW);
+    digitalWrite(PIN_LMOTA, LOW);
+    digitalWrite(PIN_LMOTB, LOW);
 
     //Power right motor to turn left
-    digitalWrite(rightMotorA, HIGH);
-    digitalWrite(rightMotorB, LOW);
+    digitalWrite(PIN_RMOTA, HIGH);
+    digitalWrite(PIN_RMOTB, LOW);
 
   }
 }
